@@ -9,12 +9,15 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       title: {
+        allowNull: false,
         type: Sequelize.STRING,
       },
       description: {
+        allowNull: false,
         type: Sequelize.TEXT,
       },
       recipe_id: {
+        allowNull: false,
         type: Sequelize.INTEGER,
         reference: {
           model: "recipe",

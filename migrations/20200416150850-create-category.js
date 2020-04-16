@@ -9,16 +9,8 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       name: {
+        allowNull: false,
         type: Sequelize.STRING,
-      },
-      recipe_id: {
-        type: Sequelize.INTEGER,
-        reference: {
-          model: "recipe",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
       },
       createdAt: {
         allowNull: false,

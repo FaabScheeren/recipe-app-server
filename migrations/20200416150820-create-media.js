@@ -9,9 +9,11 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       file_name: {
+        allowNull: false,
         type: Sequelize.STRING,
       },
       recipe_id: {
+        allowNull: false,
         type: Sequelize.INTEGER,
         reference: {
           model: "recipe",

@@ -9,6 +9,7 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       user_id: {
+        allowNull: false,
         type: Sequelize.INTEGER,
         reference: {
           model: "user",
@@ -18,15 +19,28 @@ module.exports = {
         onDelete: "SET NULL",
       },
       title: {
+        allowNull: false,
         type: Sequelize.STRING,
       },
       description: {
         type: Sequelize.TEXT,
       },
       cooking_time: {
+        allowNull: false,
         type: Sequelize.INTEGER,
       },
+      category_id: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        reference: {
+          model: "category",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
+      },
       is_public: {
+        allowNull: false,
         type: Sequelize.BOOLEAN,
       },
       createdAt: {

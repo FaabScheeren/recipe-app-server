@@ -12,6 +12,7 @@ module.exports = {
         type: Sequelize.STRING,
       },
       recipe_id: {
+        allowNull: false,
         type: Sequelize.INTEGER,
         reference: {
           model: "recipe",
