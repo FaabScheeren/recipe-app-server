@@ -4,7 +4,6 @@ module.exports = (sequelize, DataTypes) => {
     "category",
     {
       name: DataTypes.STRING,
-      recipe_id: DataTypes.INTEGER,
     },
     {}
   );
