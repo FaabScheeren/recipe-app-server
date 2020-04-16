@@ -3,11 +3,11 @@ module.exports = (sequelize, DataTypes) => {
   const recipe = sequelize.define(
     "recipe",
     {
-      user_id: DataTypes.INTEGER,
+      userId: DataTypes.INTEGER,
       title: DataTypes.STRING,
       description: DataTypes.TEXT,
       cooking_time: DataTypes.INTEGER,
-      category_id: DataTypes.INTEGER,
+      categoryId: DataTypes.INTEGER,
       is_public: DataTypes.BOOLEAN,
     },
     {}

@@ -8,11 +8,11 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      user_id: {
+      userId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         reference: {
-          model: "user",
+          model: "users",
           key: "id",
         },
         onUpdate: "CASCADE",
@@ -29,11 +29,11 @@ module.exports = {
         allowNull: false,
         type: Sequelize.INTEGER,
       },
-      category_id: {
+      categoryId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         reference: {
-          model: "category",
+          model: "categories",
           key: "id",
         },
         onUpdate: "CASCADE",
