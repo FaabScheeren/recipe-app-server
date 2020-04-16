@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     {}
   );
   category.associate = function (models) {
-    category.belongsToMany(models.recipe);
+    category.hasMany(models.recipe);
   };
   return category;
 };

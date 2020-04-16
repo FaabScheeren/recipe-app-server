@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     recipe.hasMany(models.step);
     recipe.hasMany(models.media);
     recipe.hasMany(models.ingredient);
-    recipe.hasOne(models.category);
+    recipe.belongsTo(models.category);
     recipe.belongsTo(models.user);
   };
   return recipe;
