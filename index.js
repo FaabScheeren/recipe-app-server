@@ -10,7 +10,7 @@ const userRouter = require("./routers/userRouter");
 app.use(bodyParserMiddleWare);
 // app.use(corsMiddleWare());
 
-app.use("/user", userRouter);
+app.use("/", userRouter);
 
 app.listen(3000, () => {
   console.log(`Listening on port: 3000`);
