@@ -8,21 +8,21 @@ module.exports = {
         {
           file_name:
             "https://www.aspicyperspective.com/wp-content/uploads/2018/08/chocoflan-impossible-cake-11.jpg",
-          recipe_id: 1,
+          recipeId: 1,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
           file_name:
             "https://www.bbcgoodfood.com/sites/default/files/styles/recipe/public/recipe_images/recipe-image-legacy-id--1001491_11.jpg?itok=-ns0A_kt",
-          recipe_id: 2,
+          recipeId: 2,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
           file_name:
             "https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fimages.media-allrecipes.com%2Fuserphotos%2F4433065.jpg&w=596&h=596&c=sc&poi=face&q=85",
-          recipe_id: 3,
+          recipeId: 3,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
