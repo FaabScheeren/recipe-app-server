@@ -50,7 +50,7 @@ router.post("/login", async (req, res) => {
       },
       include: { model: Recipes, include: [Steps, Ingredients] },
     });
-    console.log("Found user:", user);
+    // console.log("Found user:", user);
 
     if (user && user.password === password) {
       delete user.dataValues["password"];
