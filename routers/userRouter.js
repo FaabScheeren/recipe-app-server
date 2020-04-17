@@ -8,27 +8,30 @@ const Ingredients = require("../models/").ingredient;
 const router = new Router();
 
 router.post("/signup", async (req, res) => {
-  const { email, password } = req.body;
+  const { firstName, lastName, email, password } = req.body;
+  console.log("BODY", req.body);
 
-  if (!first_name || !last_name || !email || !password) {
+  if (!firstName || !lastName || !email || !password) {
     return res.status(400).send("Please provide all fields.");
   }
 
   try {
-    const user = User.create({
-      first_name,
-      last_name,
+    const user = await User.create({
+      first_name: firstName,
+      last_name: lastName,
       email,
       password,
     });
-
-    delete newUser.dataValues["password"]; // don't send back the password hash
+    // console.log("USER", user);
+    delete user.dataValues["password"]; // don't send back the password hash
 
     const token = toJWT({ userId: user.id });
 
     return res.status(200).send({ token, ...user.dataValues });
   } catch (e) {
-    return res.status(400).send("Something went wrong, sorry.");
+    return res
+      .status(400)
+      .send(`Something went wrong, sorry: ${e.message} - ${e}`);
   }
 });
 
