@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     "step",
     {
       description: DataTypes.TEXT,
-      recipe_id: DataTypes.INTEGER,
+      recipeId: DataTypes.INTEGER,
     },
     {}
   );

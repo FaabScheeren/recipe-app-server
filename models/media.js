@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     "media",
     {
       file_name: DataTypes.STRING,
-      recipe_id: DataTypes.INTEGER,
+      recipeId: DataTypes.INTEGER,
     },
     {}
   );

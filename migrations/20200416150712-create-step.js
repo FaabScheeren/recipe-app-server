@@ -12,7 +12,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.TEXT,
       },
-      recipe_id: {
+      recipeId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         reference: {

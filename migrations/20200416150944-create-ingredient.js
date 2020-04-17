@@ -11,7 +11,7 @@ module.exports = {
       product_name: {
         type: Sequelize.STRING,
       },
-      recipe_id: {
+      recipeId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         reference: {
