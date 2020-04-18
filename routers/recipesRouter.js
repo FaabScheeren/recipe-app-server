@@ -8,7 +8,8 @@ const Media = require("../models/").media;
 
 const router = new Router();
 
-router.get("/", async (req, res) => {
+router.get("/", auth, async (req, res) => {
+  console.log("User in route", req.user);
   try {
     const recipes = await Recipes.findAll({
       include: [

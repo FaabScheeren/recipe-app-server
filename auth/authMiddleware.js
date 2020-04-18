@@ -20,7 +20,7 @@ const auth = async (req, res, next) => {
       return res.status(404).send("User doesn't exist!!");
     }
 
-    req.user = user;
+    req.user = { ...user, token: authorization[1] };
     return next();
   } catch (e) {
     res.status(404).send("User didn't exists....");
