@@ -4,13 +4,15 @@ const User = require("../models/").user;
 const Recipes = require("../models/").recipe;
 const Steps = require("../models/").step;
 const Ingredients = require("../models/").ingredient;
+const Media = require("../models/").media;
 
 const router = new Router();
 
-router.get("/", auth, async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const recipes = await Recipes.findAll({
       include: [
+        Media,
         { model: User, attributes: ["first_name", "last_name"] },
         Steps,
         Ingredients,

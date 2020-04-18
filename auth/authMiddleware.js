@@ -5,6 +5,7 @@ const auth = async (req, res, next) => {
   const authorization = req.headers.authorization.split(" ");
 
   if (!authorization || !authorization[0] === "Bearer" || !authorization[1]) {
+    console.log("You must be logged in");
     res.status(401).send("You must be logged in.");
   }
 
