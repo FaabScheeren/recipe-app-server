@@ -26,4 +26,16 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
+router.get("/details/:id", auth, async (req, res) => {
+  const { id } = req.params;
+  console.log("RECIPE ID", id);
+
+  try {
+    const recipe = await Recipes.findByPk(id);
+    return res.status(200).send(recipe);
+  } catch (e) {
+    return res.status(500).send(`Something went wrong, sorry: ${e.message}`);
+  }
+});
+
 module.exports = router;
