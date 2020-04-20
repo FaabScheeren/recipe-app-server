@@ -5,6 +5,7 @@ const Recipes = require("../models/").recipe;
 const Steps = require("../models/").step;
 const Ingredients = require("../models/").ingredient;
 const Media = require("../models/").media;
+const Category = require("../models/").category;
 
 const router = new Router();
 
@@ -37,6 +38,7 @@ router.get("/details/:id", auth, async (req, res) => {
         { model: User, attributes: ["first_name", "last_name"] },
         { model: Steps, attributes: ["description"] },
         { model: Ingredients, attributes: ["product_name"] },
+        { model: Category, attributes: ["name"] },
       ],
     });
     return res.status(200).send(recipe);
