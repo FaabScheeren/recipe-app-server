@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const { toJWT } = require("../auth/jwt");
+const auth = require("../auth/authMiddleware");
 const User = require("../models/").user;
 const Recipes = require("../models/").recipe;
 const Steps = require("../models/").step;
@@ -9,7 +10,7 @@ const router = new Router();
 
 router.post("/signup", async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
-  console.log("BODY", req.body);
+  // console.log("BODY", req.body);
 
   if (!firstName || !lastName || !email || !password) {
     return res.status(400).send("Please provide all fields.");
@@ -35,21 +36,37 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-router.get("/user", async (req, res) => {
-  try {
-    const users = await User.findByPk(1, {
-      include: [
-        {
-          model: Recipes,
-          include: [Steps, Ingredients],
-        },
-      ],
-    });
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+  console.log("BODY IN LOGIN", req.body);
 
-    return res.status(400).send(users);
-  } catch (e) {
-    return res.status(400).send(e.message);
+  if (!email || !password) {
+    return res.status(404).send("Please provide all fields");
   }
+
+  try {
+    const user = await User.findOne({
+      where: {
+        email: email,
+      },
+      include: { model: Recipes, include: [Steps, Ingredients] },
+    });
+    // console.log("Found user:", user);
+
+    if (user && user.password === password) {
+      delete user.dataValues["password"];
+      const token = toJWT({ userId: user.id });
+      res.status(200).send({ token, ...user.dataValues });
+    }
+  } catch (e) {
+    return res.status(400).send(`Something went wrong: ${e.message}`);
+  }
+});
+
+router.get("/get-user", auth, async (req, res) => {
+  delete req.user.dataValues["password"];
+  console.log("request:", req.user.dataValues);
+  res.status(200).send({ ...req.user.dataValues });
 });
 
 module.exports = router;
