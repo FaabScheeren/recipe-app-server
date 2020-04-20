@@ -31,7 +31,14 @@ router.get("/details/:id", auth, async (req, res) => {
   console.log("RECIPE ID", id);
 
   try {
-    const recipe = await Recipes.findByPk(id);
+    const recipe = await Recipes.findByPk(id, {
+      include: [
+        { model: Media, attributes: ["file_name"] },
+        { model: User, attributes: ["first_name", "last_name"] },
+        { model: Steps, attributes: ["description"] },
+        { model: Ingredients, attributes: ["product_name"] },
+      ],
+    });
     return res.status(200).send(recipe);
   } catch (e) {
     return res.status(500).send(`Something went wrong, sorry: ${e.message}`);
