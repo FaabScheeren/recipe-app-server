@@ -5,6 +5,7 @@ const User = require("../models/").user;
 const Recipes = require("../models/").recipe;
 const Steps = require("../models/").step;
 const Ingredients = require("../models/").ingredient;
+const Category = require("../models/").category;
 
 const router = new Router();
 
@@ -49,7 +50,7 @@ router.post("/login", async (req, res) => {
       where: {
         email: email,
       },
-      include: { model: Recipes, include: [Steps, Ingredients] },
+      include: [{ model: Recipes, include: [Steps, Ingredients, Category] }],
     });
     // console.log("Found user:", user);
 
@@ -67,6 +68,18 @@ router.get("/get-user", auth, async (req, res) => {
   delete req.user.dataValues["password"];
   console.log("request:", req.user.dataValues);
   res.status(200).send({ ...req.user.dataValues });
+});
+
+router.get("/user-categories", auth, async (req, res) => {
+  const id = req.user.dataValues["id"];
+  try {
+    const categories = await Category.findAll({
+      include: [{ model: Recipes, where: { userId: id } }],
+    });
+    return res.status(200).send(categories);
+  } catch (e) {
+    res.status(500).send(e.message);
+  }
 });
 
 module.exports = router;
