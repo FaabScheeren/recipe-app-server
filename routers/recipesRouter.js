@@ -48,11 +48,66 @@ router.get("/details/:id", auth, async (req, res) => {
 });
 
 router.post("/", auth, async (req, res) => {
-  console.log("REQ BODY", req.body);
+  const {
+    title,
+    description,
+    stepsArray,
+    cookingTime,
+    category,
+    ingredientsArray,
+  } = req.body;
+
+  const { id } = req.user.dataValues;
+  const user = req.user.dataValues;
+
+  // console.log(`Title:${title},
+  // description: ${description},
+  // stepsArray: ${stepsArray},
+  // cookingTime: ${cookingTime},
+  // category: ${category},
+  // ingredientsArray: ${ingredientsArray}
+  // id: ${id}`);
+
   try {
-    const newRecipe = await Recipes.create({});
+    const newRecipe = await Recipes.create({
+      userId: id,
+      title,
+      description,
+      cooking_time: cookingTime,
+      categoryId: category,
+      is_public: true,
+    });
+
+    const recipeId = newRecipe.dataValues["id"];
+
+    const steps = await stepsArray.forEach((item) => {
+      const step = Steps.create({
+        description: item,
+        recipeId,
+      });
+      return step;
+    });
+
+    // console.log("Steps", steps);
+
+    const ingredients = await ingredientsArray.forEach((item) => {
+      const ingredient = Ingredients.create({
+        product_name: item,
+        recipeId,
+      });
+      return ingredient;
+    });
+
+    const recipe = {
+      ...newRecipe.toJSON(),
+      user,
+      steps: stepsArray,
+      ingredients: ingredientsArray,
+    };
+
+    res.status(200).json(recipe);
   } catch (e) {
-    return res.status(500).send(`Something went wrong, sorry: ${e.message}`);
+    return res.send(`Something went wrong, sorry: ${e.message}`);
   }
 });
 
