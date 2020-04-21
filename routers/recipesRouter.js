@@ -47,4 +47,13 @@ router.get("/details/:id", auth, async (req, res) => {
   }
 });
 
+router.post("/", auth, async (req, res) => {
+  console.log("REQ BODY", req.body);
+  try {
+    const newRecipe = await Recipes.create({});
+  } catch (e) {
+    return res.status(500).send(`Something went wrong, sorry: ${e.message}`);
+  }
+});
+
 module.exports = router;
