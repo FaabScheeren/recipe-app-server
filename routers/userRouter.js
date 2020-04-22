@@ -6,6 +6,7 @@ const Recipes = require("../models/").recipe;
 const Steps = require("../models/").step;
 const Ingredients = require("../models/").ingredient;
 const Category = require("../models/").category;
+const Media = require("../models/").media;
 
 const router = new Router();
 
@@ -74,7 +75,7 @@ router.get("/user-categories", auth, async (req, res) => {
   const id = req.user.dataValues["id"];
   try {
     const categories = await Category.findAll({
-      include: [{ model: Recipes, where: { userId: id } }],
+      include: [{ model: Recipes, where: { userId: id }, include: [Media] }],
     });
     return res.status(200).send(categories);
   } catch (e) {
