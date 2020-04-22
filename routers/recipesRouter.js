@@ -60,14 +60,6 @@ router.post("/", auth, async (req, res) => {
   const { id } = req.user.dataValues;
   const user = req.user.dataValues;
 
-  // console.log(`Title:${title},
-  // description: ${description},
-  // stepsArray: ${stepsArray},
-  // cookingTime: ${cookingTime},
-  // category: ${category},
-  // ingredientsArray: ${ingredientsArray}
-  // id: ${id}`);
-
   try {
     const newRecipe = await Recipes.create({
       userId: id,
@@ -88,8 +80,6 @@ router.post("/", auth, async (req, res) => {
       return step;
     });
 
-    // console.log("Steps", steps);
-
     const ingredients = await ingredientsArray.forEach((item) => {
       const ingredient = Ingredients.create({
         product_name: item,
@@ -108,6 +98,15 @@ router.post("/", auth, async (req, res) => {
     res.status(200).json(recipe);
   } catch (e) {
     return res.send(`Something went wrong, sorry: ${e.message}`);
+  }
+});
+
+router.get("/categories", auth, async (req, res) => {
+  try {
+    const categories = await Category.findAll();
+    res.status(200).send(categories);
+  } catch (e) {
+    res.status(500).send(`Something went wrong, sorry: ${e.message}`);
   }
 });
 
