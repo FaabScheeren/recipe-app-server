@@ -56,6 +56,7 @@ router.post("/", auth, async (req, res) => {
     category,
     ingredientsArray,
     photo,
+    is_public,
   } = req.body;
 
   const { id } = req.user.dataValues;
@@ -76,7 +77,7 @@ router.post("/", auth, async (req, res) => {
       description,
       cooking_time: cookingTime,
       categoryId: category,
-      is_public: true,
+      is_public,
     });
 
     const recipeId = newRecipe.dataValues["id"];
