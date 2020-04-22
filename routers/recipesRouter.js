@@ -55,6 +55,8 @@ router.post("/", auth, async (req, res) => {
     cookingTime,
     category,
     ingredientsArray,
+    photo,
+    is_public,
   } = req.body;
 
   const { id } = req.user.dataValues;
@@ -67,7 +69,7 @@ router.post("/", auth, async (req, res) => {
       description,
       cooking_time: cookingTime,
       categoryId: category,
-      is_public: true,
+      is_public,
     });
 
     const recipeId = newRecipe.dataValues["id"];
@@ -88,11 +90,17 @@ router.post("/", auth, async (req, res) => {
       return ingredient;
     });
 
+    const media = await Media.create({
+      file_name: photo,
+      recipeId,
+    });
+
     const recipe = {
       ...newRecipe.toJSON(),
       user,
       steps: stepsArray,
       ingredients: ingredientsArray,
+      media: [{ ...media.toJSON() }],
     };
 
     res.status(200).json(recipe);
