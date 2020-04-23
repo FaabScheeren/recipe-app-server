@@ -13,6 +13,7 @@ router.get("/", auth, async (req, res) => {
   console.log("User in route", req.user);
   try {
     const recipes = await Recipes.findAll({
+      where: { is_public: true },
       include: [
         Media,
         { model: User, attributes: ["first_name", "last_name"] },
