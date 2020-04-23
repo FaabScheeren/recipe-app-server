@@ -47,6 +47,7 @@ router.get("/details/:id", auth, async (req, res) => {
   }
 });
 
+// Endpoint to add recipe to database
 router.post("/", auth, async (req, res) => {
   const {
     title,
@@ -104,6 +105,52 @@ router.post("/", auth, async (req, res) => {
     };
 
     res.status(200).json(recipe);
+  } catch (e) {
+    return res.send(`Something went wrong, sorry: ${e.message}`);
+  }
+});
+
+// Endpoint to change recipe in database
+router.patch("/", auth, async (req, res) => {
+  const {
+    id,
+    title,
+    description,
+    stepsArray,
+    cookingTime,
+    category,
+    ingredientsArray,
+    photo,
+    is_public,
+  } = req.body;
+
+  // const { id } = req.user.dataValues;
+  const user = req.user.dataValues;
+
+  try {
+    const recipe = await Recipes.update(
+      {
+        title,
+        description,
+        cooking_time: cookingTime,
+        categoryId: category,
+        is_public,
+      },
+      {
+        where: { id: id },
+      }
+    );
+
+    // const steps = await stepsArray.forEach((item) => {
+    //   const findStep = findOne({
+    //     where: { description: item, recipeId: id },
+    //   });
+
+    //   if (findStep) {
+    //   }
+    // });
+
+    res.status(200).send(recipe);
   } catch (e) {
     return res.send(`Something went wrong, sorry: ${e.message}`);
   }
