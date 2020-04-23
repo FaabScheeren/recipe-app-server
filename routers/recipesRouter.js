@@ -10,9 +10,15 @@ const Category = require("../models/").category;
 const router = new Router();
 
 router.get("/", auth, async (req, res) => {
-  console.log("User in route", req.user);
+  const { limit, offset } = req.query;
+  console.log("Limit", limit);
+  console.log("offset", offset);
+  // console.log("User in route", req.user);
   try {
-    const recipes = await Recipes.findAll({
+    const recipes = await Recipes.findAndCountAll({
+      limit,
+      offset,
+      where: { is_public: true },
       include: [
         Media,
         { model: User, attributes: ["first_name", "last_name"] },
