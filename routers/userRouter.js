@@ -53,9 +53,10 @@ router.post("/login", async (req, res) => {
       },
       include: [{ model: Recipes, include: [Steps, Ingredients, Category] }],
     });
-    // console.log("Found user:", user);
+    console.log("Found user:", user);
 
     if (user && user.password === password) {
+      console.log("Send user");
       delete user.dataValues["password"];
       const token = toJWT({ userId: user.id });
       res.status(200).send({ token, ...user.dataValues });
