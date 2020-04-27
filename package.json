@@ -16,5 +16,9 @@
     "pg": "^8.0.2",
     "sequelize": "^5.21.6",
     "sequelize-cli": "^5.5.1"
+  },
+  "engines": {
+    "node": "0.8.x",
+    "npm": "1.1.x"
   }
 }
