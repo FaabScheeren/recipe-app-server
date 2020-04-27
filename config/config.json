@@ -17,6 +17,7 @@
   },
   "production": {
     "use_env_variable": "DATABASE_URL",
-    "dialect": "postgres"
+    "NODE_ENV": "production",
+    "dialect": "mysql"
   }
 }
