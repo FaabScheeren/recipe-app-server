@@ -24,6 +24,9 @@ router.post("/signup", async (req, res) => {
       last_name: lastName,
       email,
       password,
+      userImage:
+        "https://res.cloudinary.com/dcmi604u7/image/upload/v1588614214/profile-placeholder-img_uik3kq.jpg",
+      isVerified: false,
     });
     // console.log("USER", user);
     delete user.dataValues["password"]; // don't send back the password hash
