@@ -79,7 +79,7 @@ router.post("/signin", async (req, res) => {
 
 router.get("/get-user", auth, async (req, res) => {
   delete req.user.dataValues["password"];
-  console.log("request:", req.user.dataValues);
+  // console.log("request:", req.user.dataValues);
   res.status(200).send({ ...req.user.dataValues });
 });
 
