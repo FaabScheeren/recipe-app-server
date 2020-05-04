@@ -35,7 +35,7 @@ router.post("/signup", async (req, res) => {
     if (e.name === "SequelizeUniqueConstraintError") {
       return res
         .status(409)
-        .send("There is an existing account with this email");
+        .send("There is already an existing account with this email");
     }
 
     return res
@@ -59,7 +59,6 @@ router.post("/signin", async (req, res) => {
       },
       include: [{ model: Recipes, include: [Steps, Ingredients, Category] }],
     });
-    console.log("Found user:", user);
 
     if (user && user.password === password) {
       delete user.dataValues["password"];

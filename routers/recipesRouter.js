@@ -11,8 +11,8 @@ const router = new Router();
 
 router.get("/", auth, async (req, res) => {
   const { limit, offset } = req.query;
-  console.log("Limit", limit);
-  console.log("offset", offset);
+  // console.log("Limit", limit);
+  // console.log("offset", offset);
   // console.log("User in route", req.user);
   try {
     const recipes = await Recipes.findAndCountAll({
@@ -35,7 +35,7 @@ router.get("/", auth, async (req, res) => {
 
 router.get("/details/:id", auth, async (req, res) => {
   const { id } = req.params;
-  console.log("RECIPE ID", id);
+  // console.log("RECIPE ID", id);
 
   try {
     const recipe = await Recipes.findByPk(id, {
@@ -110,9 +110,9 @@ router.post("/", auth, async (req, res) => {
       media: [{ ...media.toJSON() }],
     };
 
-    res.status(200).json(recipe);
+    res.status(201).json(recipe);
   } catch (e) {
-    return res.send(`Something went wrong, sorry: ${e.message}`);
+    return res.status(500).send(`Something went wrong, sorry: ${e.message}`);
   }
 });
 
