@@ -11,9 +11,6 @@ const router = new Router();
 
 router.get("/", auth, async (req, res) => {
   const { limit, offset } = req.query;
-  console.log("Limit", limit);
-  console.log("offset", offset);
-  // console.log("User in route", req.user);
   try {
     const recipes = await Recipes.findAndCountAll({
       limit,
@@ -35,15 +32,16 @@ router.get("/", auth, async (req, res) => {
 
 router.get("/details/:id", auth, async (req, res) => {
   const { id } = req.params;
-  console.log("RECIPE ID", id);
+  // console.log("RECIPE ID", id);
 
   try {
     const recipe = await Recipes.findByPk(id, {
       include: [
         { model: Media, attributes: ["file_name"] },
         { model: User, attributes: ["first_name", "last_name"] },
-        { model: Steps, attributes: ["description"] },
-        { model: Ingredients, attributes: ["product_name"] },
+        // { model: Steps, attributes: ["description"] },
+        Steps,
+        Ingredients,
         { model: Category, attributes: ["name"] },
       ],
     });
@@ -110,14 +108,14 @@ router.post("/", auth, async (req, res) => {
       media: [{ ...media.toJSON() }],
     };
 
-    res.status(200).json(recipe);
+    res.status(201).json(recipe);
   } catch (e) {
-    return res.send(`Something went wrong, sorry: ${e.message}`);
+    return res.status(500).send(`Something went wrong, sorry: ${e.message}`);
   }
 });
 
 // Endpoint to change recipe in database
-router.patch("/", auth, async (req, res) => {
+router.patch("/", auth, async (req, res, next) => {
   const {
     id,
     title,
@@ -147,18 +145,110 @@ router.patch("/", auth, async (req, res) => {
       }
     );
 
-    // const steps = await stepsArray.forEach((item) => {
-    //   const findStep = findOne({
-    //     where: { description: item, recipeId: id },
-    //   });
+    // Item is an object
+    const steps = await stepsArray.forEach(async (item) => {
+      if (item.hasOwnProperty("id")) {
+        try {
+          const step = await Steps.update(
+            {
+              description: item.description,
+            },
+            {
+              where: { recipeId: id, id: item.id },
+            }
+          );
+          return step;
+        } catch (e) {
+          res
+            .status(500)
+            .send(`Something went wrong in updating step, sorry: ${e}`);
+        }
+        next();
+      } else {
+        try {
+          const step = await Steps.create({
+            description: item.description,
+            recipeId: id,
+          });
+          return step;
+        } catch (e) {
+          res
+            .status(500)
+            .send(`Something went wrong in adding step, sorry: ${e}`);
+        }
+      }
+    });
 
-    //   if (findStep) {
-    //   }
-    // });
+    // console.log("STEPS", steps);
+
+    const ingredients = await ingredientsArray.forEach(async (item) => {
+      if (item.hasOwnProperty("id")) {
+        try {
+          const ingredient = await Ingredients.update(
+            {
+              product_name: item.product_name,
+            },
+            {
+              where: { recipeId: id, id: item.id },
+            }
+          );
+          return ingredient;
+        } catch (e) {
+          res
+            .status(500)
+            .send(`Something went wrong in updating step, sorry: ${e}`);
+        }
+        next();
+      } else {
+        try {
+          const ingredient = await Ingredients.create({
+            product_name: item.product_name,
+            recipeId: id,
+          });
+          return ingredient;
+        } catch (e) {
+          res
+            .status(500)
+            .send(`Something went wrong in adding step, sorry: ${e}`);
+        }
+      }
+    });
 
     res.status(200).send(recipe);
   } catch (e) {
-    return res.send(`Something went wrong, sorry: ${e.message}`);
+    console.log(`Error: ${e}`);
+    return res.status(500).send(`Something went wrong, sorry: ${e.message}`);
+  }
+});
+
+router.delete("/remove/:comp", auth, async (req, res) => {
+  const { comp } = req.params;
+  console.log("COMP", comp);
+  const { removedItemsArray } = req.body;
+  console.log("ARRAY", removedItemsArray);
+  console.log("COMP", comp);
+  const ids = removedItemsArray.map((item) => {
+    return item.id;
+  });
+
+  console.log("Ids", ids);
+
+  let modelToChange;
+  if (comp === "ingredients") {
+    modelToChange = Ingredients;
+  } else if (comp === "steps") {
+    modelToChange = Steps;
+  }
+
+  console.log("MODEL", modelToChange);
+
+  try {
+    const ingredients = await modelToChange.destroy({
+      where: { id: ids },
+    });
+  } catch (e) {
+    // res.status(500).send(`Something went wrong, sorry. ${e}`);
+    res.send(`Something went wrong, sorry. ${e}`);
   }
 });
 

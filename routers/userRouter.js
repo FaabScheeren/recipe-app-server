@@ -24,26 +24,35 @@ router.post("/signup", async (req, res) => {
       last_name: lastName,
       email,
       password,
+      userImage:
+        "https://res.cloudinary.com/dcmi604u7/image/upload/v1588614214/profile-placeholder-img_uik3kq.jpg",
+      isVerified: false,
     });
     // console.log("USER", user);
     delete user.dataValues["password"]; // don't send back the password hash
 
     const token = toJWT({ userId: user.id });
 
-    return res.status(200).send({ token, ...user.dataValues });
+    return res.status(201).send({ token, ...user.dataValues });
   } catch (e) {
+    if (e.name === "SequelizeUniqueConstraintError") {
+      return res
+        .status(409)
+        .send("There is already an existing account with this email");
+    }
+
     return res
-      .status(400)
+      .status(500)
       .send(`Something went wrong, sorry: ${e.message} - ${e}`);
   }
 });
 
-router.post("/login", async (req, res) => {
+router.post("/signin", async (req, res) => {
   const { email, password } = req.body;
   console.log("BODY IN LOGIN", req.body);
 
   if (!email || !password) {
-    return res.status(404).send("Please provide all fields");
+    return res.status(400).send("Please provide all fields");
   }
 
   try {
@@ -53,12 +62,15 @@ router.post("/login", async (req, res) => {
       },
       include: [{ model: Recipes, include: [Steps, Ingredients, Category] }],
     });
-    // console.log("Found user:", user);
 
     if (user && user.password === password) {
       delete user.dataValues["password"];
       const token = toJWT({ userId: user.id });
       res.status(200).send({ token, ...user.dataValues });
+    } else if (user === null) {
+      return res
+        .status(404)
+        .send("No user found with this email or password is incorrect.");
     }
   } catch (e) {
     return res.status(400).send(`Something went wrong: ${e.message}`);
@@ -67,7 +79,7 @@ router.post("/login", async (req, res) => {
 
 router.get("/get-user", auth, async (req, res) => {
   delete req.user.dataValues["password"];
-  console.log("request:", req.user.dataValues);
+  // console.log("request:", req.user.dataValues);
   res.status(200).send({ ...req.user.dataValues });
 });
 
