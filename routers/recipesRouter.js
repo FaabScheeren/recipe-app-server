@@ -221,6 +221,37 @@ router.patch("/", auth, async (req, res, next) => {
   }
 });
 
+router.delete("/remove/:comp", auth, async (req, res) => {
+  const { comp } = req.params;
+  console.log("COMP", comp);
+  const { removedItemsArray } = req.body;
+  console.log("ARRAY", removedItemsArray);
+  console.log("COMP", comp);
+  const ids = removedItemsArray.map((item) => {
+    return item.id;
+  });
+
+  console.log("Ids", ids);
+
+  let modelToChange;
+  if (comp === "ingredients") {
+    modelToChange = Ingredients;
+  } else if (comp === "steps") {
+    modelToChange = Steps;
+  }
+
+  console.log("MODEL", modelToChange);
+
+  try {
+    const ingredients = await modelToChange.destroy({
+      where: { id: ids },
+    });
+  } catch (e) {
+    // res.status(500).send(`Something went wrong, sorry. ${e}`);
+    res.send(`Something went wrong, sorry. ${e}`);
+  }
+});
+
 router.get("/categories", auth, async (req, res) => {
   try {
     const categories = await Category.findAll();
