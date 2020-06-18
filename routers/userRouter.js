@@ -79,6 +79,30 @@ router.post("/signin", async (req, res) => {
   }
 });
 
+// /save-profile-image
+router.patch("/save-profile-image", auth, async (req, res) => {
+  const { imageUrl } = req.body;
+  const { id } = req.user.dataValues;
+
+  if (!imageUrl) {
+    return res.status(400).send("Please provide all fields");
+  }
+
+  try {
+    const user = await User.update(
+      {
+        userImage: imageUrl,
+      },
+      {
+        where: { id: id },
+      }
+    );
+    return res.status(200).send(user);
+  } catch (e) {
+    return res.status(400).send(`Something went wrong: ${e.message}`);
+  }
+});
+
 router.get("/get-user", auth, async (req, res) => {
   delete req.user.dataValues["password"];
   // console.log("request:", req.user.dataValues);
