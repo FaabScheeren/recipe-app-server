@@ -62,8 +62,10 @@ router.post("/signin", async (req, res) => {
       },
       include: [{ model: Recipes, include: [Steps, Ingredients, Category] }],
     });
+    console.log("Found user:", user);
 
     if (user && user.password === password) {
+      console.log("Send user");
       delete user.dataValues["password"];
       const token = toJWT({ userId: user.id });
       res.status(200).send({ token, ...user.dataValues });
@@ -72,6 +74,30 @@ router.post("/signin", async (req, res) => {
         .status(404)
         .send("No user found with this email or password is incorrect.");
     }
+  } catch (e) {
+    return res.status(400).send(`Something went wrong: ${e.message}`);
+  }
+});
+
+// /save-profile-image
+router.patch("/save-profile-image", auth, async (req, res) => {
+  const { imageUrl } = req.body;
+  const { id } = req.user.dataValues;
+
+  if (!imageUrl) {
+    return res.status(400).send("Please provide all fields");
+  }
+
+  try {
+    const user = await User.update(
+      {
+        userImage: imageUrl,
+      },
+      {
+        where: { id: id },
+      }
+    );
+    return res.status(200).send(user);
   } catch (e) {
     return res.status(400).send(`Something went wrong: ${e.message}`);
   }
